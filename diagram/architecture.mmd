@@ -1,0 +1,22 @@
+flowchart TB
+    A[GitHub\nfeature/*\ndevelop\nrelease/*\nmain\nvX.Y.Z]
+    B[Jenkins Multibranch\nPR validation\nbuild, test\nimage push\ngated deploy]
+    C[Artifact Registry\nImmutable image\nsync-service:<version>]
+    D[Config + Secrets\nSpring profiles\nqa / staging / prod\nMongoDB URI\nAPI keys]
+
+    E[QA\n1-2 private VMs\nManaged Instance Group\nrolling updates\nsmoke test]
+    F[Staging\n1-3 private VMs\nManaged Instance Group\nrelease validation]
+    G[Production\nRegional Managed Instance Group\n2-6 private VMs\nrolling deploy\nmaxUnavailable=0\nHTTPS Load Balancer\nautoscaling + autohealing]
+
+    H[Networking + Security\nPrivate VPC\nprivate VMs\nCloud NAT\nIAP TCP\nCloud Armor if public]
+    I[MongoDB Atlas\nManaged cluster on GCP\nPrivate endpoint / PSC\nBackups + PITR]
+    J[Observability\nCloud Logging\nCloud Monitoring\nOps Agent\nalerts + dashboards]
+
+    A --> B --> C
+    C --> E
+    C --> F
+    C --> G
+    D --> G
+    E --> H
+    F --> I
+    G --> J
